@@ -8,24 +8,38 @@ class Punchy
 	#       |_tasks		Ordered list of tasks pertaining to each bug
 
 	# Creates basic method and instance vars
-	attr_accessor :command
+	attr_accessor :command, :numDirectories
 
 	def initialize
 		@command = ""	
+		@directories = Array.new 
+	end
+
+	# Lists all the directories in the current path not starting with a "."
+	def directory_listing
+		Dir.foreach('.') do |f|
+			if f[0] != "."
+				if File.directory?(f)
+					@directories[@directories.size] = f
+					puts "[#{@directories.size}] - #{f}"
+				end
+			end
+		end
 	end
 
 	def home_screen
 		while @command != ":q"
-			Dir.foreach('.') do |f|
-				if f[0] != "."
-					if File.directory?(f)
-						puts f
-					end
-				end
-			end
+			self.directory_listing
 
 			puts "Enter command : (:q to quit)"
 			@command = gets.to_s.strip
+			commandI = @command.to_i
+			
+			if commandI <= (@directories.size) && commandI > 0
+				puts "You selected #{@directories[commandI]}"
+			end
+
+			@directories = Array.new
 		end
 	end
 end
