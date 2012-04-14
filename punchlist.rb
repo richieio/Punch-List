@@ -8,15 +8,23 @@ class Punchy
 	#       |_tasks		Ordered list of tasks pertaining to each bug
 
 	# Creates basic method and instance vars
+	attr_accessor :command
+
 	def initialize
-	
+		@command = ""	
 	end
 
 	def home_screen
-
+		while @command != ":q"
+			@command = gets.to_s.strip
+		end
 	end
 end
 
 ARGV.each do |a|
 	puts "Argument: #{a}"
 end
+
+
+punchy = Punchy.new
+punchy.home_screen
