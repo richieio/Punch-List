@@ -13,7 +13,7 @@ class Punchy
 	def initialize
 		@command = ""	
 		@dirs = Array.new 
-		@curDir = Dir.getwd
+		@curDir = Dir.pwd
 	end
 
 	# Lists all the directories in the current path not starting with a "."
@@ -39,14 +39,21 @@ class Punchy
 		@command = gets.to_s.strip #must strip to get rid of \n when user hits enter
 		commandI = @command.to_i #convert input to integer to see what number they pressed
 		
-		if commandI <= (@dirs.size) && commandI > 0 #many strings will convert to integer 0, therefore we cannot use 0 as a number to be used
+		if commandI < (@dirs.size) && commandI > 0 #many strings will convert to integer 0, therefore we cannot use 0 as a number to be used
 			puts "You selected #{@dirs[commandI]}"
+			self.open_dir(@dirs[commandI])
+		elsif @command == ":q"
+			return #quite command entered
+		elsif
+			puts "Invalid selection. Try again"
 		end
 	end
 
 	#open the directory the user entered
-	def open_dir
-		
+	def open_dir(dir_path)
+		Dir.chdir(@curDir + "/#{dir_path}") #enter directory selected by user
+		@curDir = Dir.pwd #update current directory
+		puts Dir.pwd #for now, echo out current directory. need to instantiate the new project class here!
 	end
 
 	def home_screen #the main controller for punchy
