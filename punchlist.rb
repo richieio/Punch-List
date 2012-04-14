@@ -16,15 +16,11 @@ class Punchy
 
 	def home_screen
 		while @command != ":q"
+			puts "Enter command : (:q to quit)"
 			@command = gets.to_s.strip
 		end
 	end
 end
-
-ARGV.each do |a|
-	puts "Argument: #{a}"
-end
-
 
 punchy = Punchy.new
 punchy.home_screen
