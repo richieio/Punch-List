@@ -16,6 +16,14 @@ class Punchy
 
 	def home_screen
 		while @command != ":q"
+			Dir.foreach('.') do |f|
+				if f[0] != "."
+					if File.directory?(f)
+						puts f
+					end
+				end
+			end
+
 			puts "Enter command : (:q to quit)"
 			@command = gets.to_s.strip
 		end
