@@ -8,20 +8,20 @@ class Punchy
 	#       |_tasks		Ordered list of tasks pertaining to each bug
 
 	# Creates basic method and instance vars
-	attr_accessor :command, :numDirectories, :currentDirectory
+	attr_accessor :command, :dirs, :curDir
 
 	def initialize
 		@command = ""	
-		@directories = Array.new 
-		@currentDirectory = Dir.getwd
+		@dirs = Array.new 
+		@curDir = Dir.getwd
 	end
 
 	# Lists all the directories in the current path not starting with a "."
-	def directory_listing
+	def dir_listing
 		Dir.glob('*') do |f|#go through all the files in the directory that don't start with a "."
 				if File.directory?(f)#if file is a directory, then it's a project
-					@directories[@directories.size] = f#add the file to the directory arrray
-					puts "[#{@directories.size}] - #{f}"#display the directory and the number associated to it
+					@dirs[@dirs.size + 1] = f#add the file to the directory arrray
+					puts "[#{@dirs.size - 1}] - #{f}"#display the directory and the number associated to it
 				end
 		end
 	end
@@ -29,7 +29,7 @@ class Punchy
 	#the menu to be looped through
 	def display_menu
 		puts ""
-		puts "You are currently in #{@currentDirectory}"
+		puts "You are currently in #{@curDir}"
 		puts "Enter the number next to the project file to open that project, :q to quit"
 		puts ""
 	end
@@ -39,20 +39,25 @@ class Punchy
 		@command = gets.to_s.strip #must strip to get rid of \n when user hits enter
 		commandI = @command.to_i #convert input to integer to see what number they pressed
 		
-		if commandI <= (@directories.size) && commandI > 0 #many strings will convert to integer 0, therefore we cannot use 0 as a number to be used
-			puts "You selected #{@directories[commandI]}"
+		if commandI <= (@dirs.size) && commandI > 0 #many strings will convert to integer 0, therefore we cannot use 0 as a number to be used
+			puts "You selected #{@dirs[commandI]}"
 		end
+	end
+
+	#open the directory the user entered
+	def open_dir
+		
 	end
 
 	def home_screen #the main controller for punchy
 		while @command != ":q"
 			self.display_menu
 
-			self.directory_listing
+			self.dir_listing
 			
 			self.input
 
-			@directories = Array.new
+			@dirs = Array.new
 		end
 	end
 end
