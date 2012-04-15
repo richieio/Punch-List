@@ -165,42 +165,28 @@ end
 #We need to add functions to add the markdown, to append, to delete, yada yada yada
 #I'll get more comments on what's going on soon
 class Tasks 
-	attr_accessor :files, :command
+	attr_accessor :file, :command
 	
 	def initialize
-		self._getFiles
-	end
-
-	def _getFiles
-		@files = Array.new
-		
-		Dir.glob('*') do |f|#go through all the files in the directory that don't start with a "."
-			if File.extname(f) == ".txt"
-				@files << f
-			end
-		end		
+		@file = "tasks.txt"
 	end
 
 	def display_menu
 		puts ""
 		puts "You are currently in #{Dir.pwd}"
-		puts "Enter the number next to the file you want to open, :q to go back to the project directory"
+		puts "**Menu Options**"
+		puts "1) Enter cat to cat #{@file}"
+		puts "2) Enter add to add a task"
+		puts "3) Enter complete to mark a task as complete"
+		puts "4) Enter :q to go back to the project directory"
 		puts ""
-	end
-
-	def file_listing
-		self._getFiles
-		@files.each do |f|
-			puts "[#{@files.index(f)}] #{f}"	
-		end
 	end
 
 	def input
 		@command = gets.to_s.strip #must strip to get rid of \n when user hits enter
-		commandI = @command.to_i #convert input to integer to see what number they pressed
 
-		if commandI < @files.size
-			file = File.new("#{Dir.pwd}/#{@files[commandI]}", "r")
+		if @command == "cat"
+			file = File.new("#{Dir.pwd}/#{@file}", "r")
 			while(line = file.gets)
 				puts line
 			end
@@ -217,8 +203,6 @@ class Tasks
 		while @command != ":q"
 			self.display_menu
 
-			self.file_listing
-			
 			self.input
 		end
 	end
