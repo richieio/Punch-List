@@ -168,15 +168,17 @@ class Tasks
 	attr_accessor :files, :command
 	
 	def initialize
-		@files = Array.new
+		self._getFiles
+	end
 
+	def _getFiles
+		@files = Array.new
+		
 		Dir.glob('*') do |f|#go through all the files in the directory that don't start with a "."
 			if File.extname(f) == ".txt"
 				@files << f
 			end
 		end		
-
-		puts @files.inspect
 	end
 
 	def display_menu
@@ -187,6 +189,7 @@ class Tasks
 	end
 
 	def file_listing
+		self._getFiles
 		@files.each do |f|
 			puts "[#{@files.index(f)}] #{f}"	
 		end
@@ -217,8 +220,6 @@ class Tasks
 			self.file_listing
 			
 			self.input
-
-			@files = Array.new
 		end
 	end
 end
