@@ -148,12 +148,9 @@ class Project < Punchy
 	def open_dir(dir_path)
 		Dir.chdir(Dir.pwd + "/#{dir_path}") #enter directory selected by user
 		
-		if dir_path == "features"
-			features = Features.new
-			features.home_screen
-		elsif dir_path == "bugs"
-			bugs = Bugs.new
-			bugs.home_screen
+		if dir_path == "features" || dir_path == "bugs"
+			tasks = Tasks.new
+			tasks.home_screen
 		end
 		
 		#we return back to here when features/bugs class returns by calling return in the input function
@@ -165,10 +162,9 @@ end
 
 #rich, this class is really similar to Punchy but I don't think we should extend Punchy since a majority of the methods need to be overwritten anyway
 #I need you to figure out what the menu should be, right now you just enter the number next to the file and it just echoes out the contents
-#The Bugs class will look exactly the same as this so in retrospect, I think it should just be the same class
 #We need to add functions to add the markdown, to append, to delete, yada yada yada
 #I'll get more comments on what's going on soon
-class Features 
+class Tasks 
 	attr_accessor :files, :command
 	
 	def initialize
