@@ -32,8 +32,53 @@ class Punchy
 	def display_menu
 		puts ""
 		puts "You are currently in #{Dir.pwd}"
-		puts "Enter the number next to the project file to open that project, :q to quit"
+		puts "**Menu Options**"
+		puts "1) Enter the number next to the project file to open that project"
+		puts "2) Enter :n to create a new project"
+		puts "3) Enter :d to delete a project"
+		puts "4) Enter :q to quit"
 		puts ""
+	end
+
+	#I/O for creating a new dir (project or task manager)
+	def create_new_dir
+		puts ""
+		puts "Type in the name of the new project, :q to quit"
+
+		projectName = gets.to_s.strip
+		if projectName == ":q"
+			return
+		end
+
+		if @@dirs.index(projectName) != nil
+			puts "Sorry, that project already exists. Try again"
+			self.create_new_dir
+		else
+			Dir.mkdir(projectName, 0644)
+		end
+	
+	end
+
+	#I/O for deleting a dir (project or task manager)
+	def delete_dir
+		puts ""
+		puts "Type in the name of the project you want to delete, :q to quit"
+
+		projectName = gets.to_s.strip
+		if projectName == ":q"
+			return
+		end
+
+		if @@dirs.index(projectName) != nil
+			begin
+				Dir.rmdir(projectName)
+			rescue SystemCallError => ex
+				puts "Sorry, can only delete an empty directory"
+			end
+		else
+			puts "Sorry, that project does not exist. Try again"
+			self.delete_dir
+		end
 	end
 
 	#handle what the user inputed
@@ -43,6 +88,10 @@ class Punchy
 		if commandI < (@@dirs.size) && commandI > 0 #many strings will convert to integer 0, therefore we cannot use 0 as a number to be used
 			puts "You selected #{@@dirs[commandI]}"
 			self.open_dir(@@dirs[commandI])
+		elsif @command == ":n"
+			self.create_new_dir
+		elsif @command == ":d"
+			self.delete_dir
 		elsif @command == ":q"
 			return #quit command entered
 		elsif
@@ -88,7 +137,11 @@ class Project < Punchy
 	def display_menu
 		puts ""
 		puts "You are currently in #{Dir.pwd}"
-		puts "Enter the number next to the category, :q to back to your punchlist"
+		puts "**Menu Options**"
+		puts "1) Enter the number next to category to open that category"
+		puts "2) Enter :n to create a new category"
+		puts "3) Enter :d to delete a category"
+		puts "4) Enter :q to go back to your punchlist"
 		puts ""
 	end
 
