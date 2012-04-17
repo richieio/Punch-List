@@ -1,1 +1,4 @@
 a task is here
+entered from command line
+entered from command linenew taskanother task
+hmm

@@ -182,6 +182,17 @@ class Tasks
 		puts ""
 	end
 
+	def addTask
+		rwFile = File.new("#{Dir.pwd}/#{@file}", "a");
+
+		puts ""
+		puts "Enter your new task!"
+		puts ""
+
+		task = gets.to_s
+		rwFile.syswrite(task)
+	end
+
 	def input
 		@command = gets.to_s.strip #must strip to get rid of \n when user hits enter
 
@@ -191,6 +202,8 @@ class Tasks
 				puts line
 			end
 			file.close
+		elsif @command == "add"
+			self.addTask
 		elsif @command == ":q"
 			return #quit command entered
 		elsif
