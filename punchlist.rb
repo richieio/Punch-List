@@ -12,18 +12,18 @@ class Punchy
 
 	def initialize
 		@command = ""	
-		@@dirs = Array.new 
+		@dirs = Array.new 
 	end
 
 	# Lists all the directories in the current path not starting with a "."
 	def dir_listing
 		Dir.glob('*') do |f|#go through all the files in the directory that don't start with a "."
 				if File.directory?(f)#if file is a directory, then it's a project
-					if @@dirs.size == 0
-						@@dirs[0] = nil
+					if @dirs.size == 0
+						@dirs[0] = nil
 					end
-					@@dirs[@@dirs.size] = f#add the file to the directory arrray
-					puts "[#{@@dirs.size - 1}] - #{f}"#display the directory and the number associated to it
+					@dirs[@dirs.size] = f#add the file to the directory arrray
+					puts "[#{@dirs.size - 1}] - #{f}"#display the directory and the number associated to it
 				end
 		end
 	end
@@ -50,11 +50,11 @@ class Punchy
 			return
 		end
 
-		if @@dirs.index(projectName) != nil
+		if @dirs.index(projectName) != nil
 			puts "Sorry, that project already exists. Try again"
 			self.create_new_dir
 		else
-			Dir.mkdir(projectName, 0644)
+			Dir.mkdir(projectName, 0777)
 		end
 	
 	end
@@ -69,7 +69,7 @@ class Punchy
 			return
 		end
 
-		if @@dirs.index(projectName) != nil
+		if @dirs.index(projectName) != nil
 			begin
 				Dir.rmdir(projectName)
 			rescue SystemCallError => ex
@@ -85,9 +85,9 @@ class Punchy
 	def input
 		@command = gets.to_s.strip #must strip to get rid of \n when user hits enter
 		commandI = @command.to_i #convert input to integer to see what number they pressed
-		if commandI < (@@dirs.size) && commandI > 0 #many strings will convert to integer 0, therefore we cannot use 0 as a number to be used
-			puts "You selected #{@@dirs[commandI]}"
-			self.open_dir(@@dirs[commandI])
+		if commandI < (@dirs.size) && commandI > 0 #many strings will convert to integer 0, therefore we cannot use 0 as a number to be used
+			puts "You selected #{@dirs[commandI]}"
+			self.open_dir(@dirs[commandI])
 		elsif @command == ":n"
 			self.create_new_dir
 		elsif @command == ":d"
@@ -107,7 +107,7 @@ class Punchy
 		project.home_screen
 
 		#we return back to here when project class returns by calling return in the input function
-		@@dirs = Array.new
+		@dirs = Array.new
 		Dir.chdir('..')
 	end
 	
@@ -120,7 +120,7 @@ class Punchy
 			
 			self.input
 
-			@@dirs = Array.new
+			@dirs = Array.new
 		end
 	end
 end
@@ -129,7 +129,7 @@ class Project < Punchy
 	
 	#reset the listing of dirs, command is an instance variable not a class variable because it should not be shared
 	def initialize
-		@@dirs = Array.new
+		@dirs = Array.new
 		@command = ""
 	end
 
@@ -154,21 +154,25 @@ class Project < Punchy
 		end
 		
 		#we return back to here when features/bugs class returns by calling return in the input function
-		@@dirs = Array.new
+		@dirs = Array.new
 		Dir.chdir('..')
 	end
 
 end
 
 #rich, this class is really similar to Punchy but I don't think we should extend Punchy since a majority of the methods need to be overwritten anyway
-#I need you to figure out what the menu should be, right now you just enter the number next to the file and it just echoes out the contents
 #We need to add functions to add the markdown, to append, to delete, yada yada yada
 #I'll get more comments on what's going on soon
 class Tasks 
 	attr_accessor :file, :command
 	
 	def initialize
-		@file = "tasks.txt"
+		@file = "tasks.md"
+
+		if !File.exists?(@file)
+			File.new("#{Dir.pwd}/#{@file}", "w+")
+			puts "New file '#{@file}' was created"
+		end
 	end
 
 	def display_menu
@@ -183,14 +187,10 @@ class Tasks
 	end
 
 	def addTask
-		rwFile = File.new("#{Dir.pwd}/#{@file}", "a");
-
-		puts ""
-		puts "Enter your new task!"
-		puts ""
+		puts "\nEnter your new task!\n"
 
 		task = gets.to_s
-		rwFile.syswrite(task)
+		File.open(@file, 'a') {|f| f.write(task) }
 	end
 
 	def input
