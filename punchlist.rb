@@ -189,8 +189,8 @@ class Tasks
 	def addTask
 		puts "\nEnter your new task!\n"
 
-		task = gets.to_s
-		File.open(@file, 'a') {|f| f.write(task) }
+		task = gets.to_s.strip
+		File.open(@file, 'a') {|f| f.write(task.newTask) }
 	end
 
 	def input
@@ -218,6 +218,13 @@ class Tasks
 
 			self.input
 		end
+	end
+end
+
+class String
+
+	def newTask
+		"*" + self + "*\n"
 	end
 end
 
