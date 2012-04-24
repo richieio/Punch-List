@@ -164,36 +164,14 @@ end
 #We need to add functions to add the markdown, to append, to delete, yada yada yada
 #I'll get more comments on what's going on soon
 class Tasks 
-	attr_accessor :file, :command, :fileContents
+	attr_accessor :file, :command 
 	
 	def initialize
 		@file = "tasks.md"
-		@fileContents = Hash.new
 
 		if !File.exists?(@file)
 			File.new("#{Dir.pwd}/#{@file}", "w+")
 			puts "New file '#{@file}' was created"
-		else
-			i = 0
-			File.open(@file, 'r') do |f|
-				while line = f.gets
-					inline = line.to_s.strip
-					if inline[0, 2] == "* "
-						assignee = inline[2..-1].to_sym
-						@fileContents[assignee] = Array.new
-						puts @fileContents.inspect
-					elsif inline[0, 2] == "**"
-						@fileContents[assignee][i] << Hash.new
-						puts @fileContents.inspect
-						created = inline[inline.index("*created") + 1..-2]
-						task =  inline[2..inline.index("**", 3) - 1]	
-						@fileContents[assignee][i][:task] = task
-						@fileContents[assignee][i][:created] = created
-					end	
-					i += 1
-				end
-			end
-			puts @fileContents.inspect
 		end
 	end
 
